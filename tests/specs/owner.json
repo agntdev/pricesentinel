@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/owner",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show admin dashboard metrics"
+            }
+          }
+        ],
+        "send": {
+          "text": "/owner"
+        }
+      }
+    ]
+  }
+]
