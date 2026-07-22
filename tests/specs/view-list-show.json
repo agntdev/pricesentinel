@@ -1,19 +1,17 @@
 [
   {
-    "name": "View List",
+    "name": "View List shows empty state",
     "steps": [
       {
+        "send": { "callback": "view_list:show" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Display current watchlist items"
+              "text": "No coins on your watchlist yet — tap ➕ Add Coin to add one."
             }
           }
-        ],
-        "send": {
-          "callback": "view_list:show"
-        }
+        ]
       }
     ]
   }

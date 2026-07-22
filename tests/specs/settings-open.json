@@ -1,19 +1,17 @@
 [
   {
-    "name": "Settings",
+    "name": "Settings shows current settings",
     "steps": [
       {
+        "send": { "callback": "settings:open" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Configure quiet hours/cooldowns"
+              "text": "Your settings:\n\n🌍 Timezone: UTC+0\n🌙 Quiet hours: 00:00 – 07:00\n💰 Currency: USD\n📬 Summary time: 08:00"
             }
           }
-        ],
-        "send": {
-          "callback": "settings:open"
-        }
+        ]
       }
     ]
   }

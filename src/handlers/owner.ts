@@ -1,15 +1,70 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import {
+  inlineButton,
+  inlineKeyboard,
+} from "../toolkit/index.js";
+import { getOwnerMetrics } from "../storage.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+const OWNER_IDS = process.env.OWNER_IDS?.split(",").map(Number) ?? [];
 
-const composer = new Composer();
+const composer = new Composer<Ctx>();
 
 composer.command("owner", async (ctx) => {
-  await ctx.reply("Show admin dashboard metrics");
+  const userId = ctx.from?.id;
+  if (!userId || (OWNER_IDS.length > 0 && !OWNER_IDS.includes(userId))) {
+    await ctx.reply("This command is for the bot owner only.");
+    return;
+  }
+  const metrics = await getOwnerMetrics();
+  const lines = [
+    `📊 Owner Dashboard`,
+    ``,
+    `👥 Active users: ${metrics.activeUserCount}`,
+    ``,
+    `🔥 Top alerts (last 100):`,
+  ];
+  if (metrics.topAlerts.length === 0) {
+    lines.push(`  No alerts fired yet.`);
+  } else {
+    for (const a of metrics.topAlerts.slice(0, 10)) {
+      lines.push(`  ${a.ticker}: ${a.count}x`);
+    }
+  }
+  await ctx.reply(lines.join("\n"), {
+    reply_markup: inlineKeyboard([
+      [inlineButton("🔄 Refresh", "owner:refresh")],
+    ]),
+  });
+});
+
+composer.callbackQuery("owner:refresh", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const userId = ctx.from?.id;
+  if (!userId || (OWNER_IDS.length > 0 && !OWNER_IDS.includes(userId))) {
+    await ctx.reply("Not authorized.");
+    return;
+  }
+  const metrics = await getOwnerMetrics();
+  const lines = [
+    `📊 Owner Dashboard`,
+    ``,
+    `👥 Active users: ${metrics.activeUserCount}`,
+    ``,
+    `🔥 Top alerts (last 100):`,
+  ];
+  if (metrics.topAlerts.length === 0) {
+    lines.push(`  No alerts fired yet.`);
+  } else {
+    for (const a of metrics.topAlerts.slice(0, 10)) {
+      lines.push(`  ${a.ticker}: ${a.count}x`);
+    }
+  }
+  await ctx.reply(lines.join("\n"), {
+    reply_markup: inlineKeyboard([
+      [inlineButton("🔄 Refresh", "owner:refresh")],
+    ]),
+  });
 });
 
 export default composer;

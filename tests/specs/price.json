@@ -1,19 +1,17 @@
 [
   {
-    "name": "/price",
+    "name": "/price with empty watchlist shows add prompt",
     "steps": [
       {
+        "send": { "text": "/price" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Check price for specific coin or entire watchlist"
+              "text": "No coins on your watchlist yet — tap ➕ Add Coin to add one."
             }
           }
-        ],
-        "send": {
-          "text": "/price"
-        }
+        ]
       }
     ]
   }
