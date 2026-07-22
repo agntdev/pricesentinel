@@ -1,19 +1,86 @@
 [
   {
-    "name": "Add Coin",
+    "name": "Add Coin shows preset coins",
     "steps": [
       {
+        "send": { "callback": "add_coin:start" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Begin adding a new coin to watchlist"
+              "text": "Pick a coin below, or type a custom ticker."
             }
           }
-        ],
-        "send": {
-          "callback": "add_coin:start"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Add Coin — pick BTC shows nickname prompt",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Pick a coin below, or type a custom ticker." } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:pick:BTC" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got BTC. Want to give it a nickname?" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Add Coin — skip nickname shows rule options",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Pick a coin below, or type a custom ticker." } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:pick:ETH" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got ETH. Want to give it a nickname?" } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:nickname_skip" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Add alert rules for this coin?" } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Add Coin — skip rules confirms addition",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Pick a coin below, or type a custom ticker." } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:pick:BTC" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got BTC. Want to give it a nickname?" } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:nickname_skip" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Add alert rules for this coin?" } }
+        ]
+      },
+      {
+        "send": { "callback": "add_coin:confirm" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Added BTC to your watchlist." } }
+        ]
       }
     ]
   }

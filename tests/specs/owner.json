@@ -1,19 +1,17 @@
 [
   {
-    "name": "/owner",
+    "name": "/owner shows admin dashboard when no owner restriction",
     "steps": [
       {
+        "send": { "text": "/owner" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Show admin dashboard metrics"
+              "text": "📊 Owner Dashboard\n\n👥 Active users: 0\n\n🔥 Top alerts (last 100):\n  No alerts fired yet."
             }
           }
-        ],
-        "send": {
-          "text": "/owner"
-        }
+        ]
       }
     ]
   }
